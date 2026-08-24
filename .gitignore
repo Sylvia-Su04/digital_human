@@ -1,0 +1,68 @@
+# ==================== 第三方克隆仓库（不纳入本仓库） ====================
+LivePortrait/
+GPT-SoVITS/
+
+# ==================== 模型权重（大文件，不纳入版本控制） ====================
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+
+# ==================== 媒体文件（音频/视频/图片素材） ====================
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.gif
+ref/*
+!ref/.gitkeep
+
+# ==================== 输出文件 ====================
+outputs/*
+!outputs/.gitkeep
+result.mp4
+temp_voice.wav
+temp_*.wav
+
+# ==================== Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# ==================== 虚拟环境 ====================
+venv/
+env/
+.venv/
+.env/
+
+# ==================== IDE / 编辑器 ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ==================== 日志 / 临时文件 ====================
+*.log
+logs/
+*.tmp
+*.bak
+*.cache
+
+# ==================== Jupyter ====================
+.ipynb_checkpoints/
