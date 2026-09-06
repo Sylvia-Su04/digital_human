@@ -1,0 +1,55 @@
+{
+  "1": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "D:\\digital_human\\ComfyUI\\output\\manhua_animation_00002.mp4",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1
+    }
+  },
+  "2": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "D:\\digital_human\\ComfyUI\\output\\20260905172556.mp4",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1
+    }
+  },
+  "3": {
+    "class_type": "VHS_MergeImages",
+    "inputs": {
+      "images_A": ["1", 0],
+      "images_B": ["2", 0],
+      "merge_strategy": "match A",
+      "scale_method": "bilinear",
+      "crop": "disabled"
+    }
+  },
+  "4": {
+    "class_type": "VHS_LoadAudio",
+    "inputs": {
+      "audio_file": "input/role_voice.wav"
+    }
+  },
+  "5": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["3", 0],
+      "audio": ["4", 0],
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "manhua_episode",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "test_face.jpg"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "test_face.jpg"
+    }
+  },
+  "3": {
+    "class_type": "DownloadAndLoadLivePortraitModels",
+    "inputs": {
+      "precision": "fp16",
+      "mode": "human"
+    }
+  },
+  "4": {
+    "class_type": "LivePortraitLoadCropper",
+    "inputs": {
+      "onnx_device": "CUDA",
+      "keep_model_loaded": true,
+      "detection_threshold": 0.5
+    }
+  },
+  "5": {
+    "class_type": "LivePortraitCropper",
+    "inputs": {
+      "pipeline": ["3", 0],
+      "cropper": ["4", 0],
+      "source_image": ["1", 0],
+      "dsize": 512,
+      "scale": 2.3,
+      "vx_ratio": 0.0,
+      "vy_ratio": 0.0,
+      "face_index": 0,
+      "face_index_order": "large-small",
+      "rotate": false
+    }
+  },
+  "6": {
+    "class_type": "LivePortraitProcess",
+    "inputs": {
+      "pipeline": ["3", 0],
+      "crop_info": ["5", 1],
+      "source_image": ["1", 0],
+      "driving_images": ["2", 0],
+      "lip_zero": false,
+      "lip_zero_threshold": 0.03,
+      "stitching": true,
+      "delta_multiplier": 1.0,
+      "mismatch_method": "constant",
+      "relative_motion_mode": "relative",
+      "driving_smooth_observation_variance": 0.001
+    }
+  },
+  "7": {
+    "class_type": "LivePortraitComposite",
+    "inputs": {
+      "source_image": ["1", 0],
+      "cropped_image": ["5", 0],
+      "liveportrait_out": ["6", 1]
+    }
+  },
+  "8": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["7", 0],
+      "filename_prefix": "liveportrait_test"
+    }
+  }
+}

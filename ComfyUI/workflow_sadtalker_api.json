@@ -1,0 +1,37 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "test_face.jpg"
+    }
+  },
+  "2": {
+    "class_type": "ShowAudio",
+    "inputs": {
+      "audio": "test_audio.wav"
+    }
+  },
+  "3": {
+    "class_type": "SadTalker",
+    "inputs": {
+      "image": ["1", 0],
+      "audio": ["2", 0],
+      "poseStyle": 0,
+      "faceModelResolution": "256",
+      "preprocess": "crop",
+      "stillMode": false,
+      "batchSizeInGeneration": 2,
+      "gfpganAsFaceEnhancer": false,
+      "useIdleMode": false,
+      "idleModeTime": 5,
+      "useRefVideo": false,
+      "refInfo": "pose"
+    }
+  },
+  "4": {
+    "class_type": "ShowText",
+    "inputs": {
+      "text": ["3", 0]
+    }
+  }
+}
