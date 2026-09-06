@@ -1,0 +1,110 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "manhua_scene.png"
+    }
+  },
+  "2": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": ["1", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "13": {
+    "class_type": "VHS_DuplicateLatents",
+    "inputs": {
+      "latents": ["2", 0],
+      "multiply_by": 16
+    }
+  },
+  "3": {
+    "class_type": "ADE_LoadAnimateDiffModel",
+    "inputs": {
+      "model_name": "mm_sd_v15_v2.ckpt"
+    }
+  },
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "Counterfeit-V2.5_fp16.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "ADE_AnimateDiffLoRALoader",
+    "inputs": {
+      "name": "v2_lora_ZoomIn.ckpt",
+      "strength": 0.8
+    }
+  },
+  "6": {
+    "class_type": "ADE_ApplyAnimateDiffModel",
+    "inputs": {
+      "motion_model": ["3", 0],
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "motion_lora": ["5", 0],
+      "scale_multival": null,
+      "effect_multival": null
+    }
+  },
+  "7": {
+    "class_type": "ADE_UseEvolvedSampling",
+    "inputs": {
+      "model": ["4", 0],
+      "beta_schedule": "autoselect",
+      "m_models": ["6", 0],
+      "context_options": null,
+      "sample_settings": null
+    }
+  },
+  "8": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "same scene, anime manga style, subtle motion, gentle camera push-in, consistent character, detailed, high quality",
+      "clip": ["4", 1]
+    }
+  },
+  "9": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "low quality, blurry, distorted, flickering, static, watermark",
+      "clip": ["4", 1]
+    }
+  },
+  "10": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 42,
+      "steps": 18,
+      "cfg": 6.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.7,
+      "model": ["7", 0],
+      "positive": ["8", 0],
+      "negative": ["9", 0],
+      "latent_image": ["13", 0]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["10", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "12": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["11", 0],
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "manhua_animation",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

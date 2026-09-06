@@ -1,0 +1,37 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "manhua_character.png"
+    }
+  },
+  "2": {
+    "class_type": "ShowAudio",
+    "inputs": {
+      "audio": "role_voice.wav"
+    }
+  },
+  "3": {
+    "class_type": "SadTalker",
+    "inputs": {
+      "image": ["1", 0],
+      "audio": ["2", 0],
+      "poseStyle": 0,
+      "faceModelResolution": "256",
+      "preprocess": "crop",
+      "stillMode": true,
+      "batchSizeInGeneration": 2,
+      "gfpganAsFaceEnhancer": false,
+      "useIdleMode": false,
+      "idleModeTime": 5,
+      "useRefVideo": false,
+      "refInfo": "pose"
+    }
+  },
+  "4": {
+    "class_type": "ShowText",
+    "inputs": {
+      "text": ["3", 0]
+    }
+  }
+}
