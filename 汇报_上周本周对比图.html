@@ -1,0 +1,78 @@
+<html style="margin:0;padding:0;">
+<div style="background-color:transparent;box-sizing:border-box;font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;--accent:#8BC8EA;padding:16px;max-width:860px;">
+
+  <!-- 标题 -->
+  <div style="font-size:20px;font-weight:600;color:#1A1B1C;margin-bottom:4px;">从"一个声音"到"一条流水线"</div>
+  <div style="font-size:12.5px;color:#6B7280;margin-bottom:16px;">数字人项目 9.2–9.7 周工作对比 · 数据来源：项目实际产出记录</div>
+
+  <!-- 双栏对比 -->
+  <div style="display:flex;gap:14px;flex-wrap:wrap;box-sizing:border-box;">
+
+    <!-- 上周 -->
+    <div style="flex:1 1 260px;min-width:0;border-radius:14px;border:1px solid #E4E3DD;background:#FFFFFF;padding:14px 16px;box-sizing:border-box;">
+      <div style="display:inline-block;font-size:12px;font-weight:600;color:#6B7280;background:rgba(107,114,128,0.10);border-radius:20px;padding:3px 10px;margin-bottom:10px;">上周（9.2 前）· 单点能力</div>
+      <div style="font-size:15px;font-weight:600;color:#1A1B1C;margin-bottom:12px;">造"声音"——GPT-SoVITS 音色训练</div>
+      <div style="font-size:13px;color:#1A1B1C;line-height:1.7;">
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">定位：</span>单点能力</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">核心工作：</span>录音切片 → ASR 文字校对 → 微调训练（Su 音色 8 epoch + Su_emotional 5 epoch）</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">产出：</span>专属音色模型</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">应用：</span>配音</div>
+        <div><span style="font-weight:600;">自动化程度：</span>单环节</div>
+      </div>
+    </div>
+
+    <!-- 本周 -->
+    <div style="flex:1 1 260px;min-width:0;border-radius:14px;border:1px solid rgba(139,200,234,0.55);background:linear-gradient(135deg, rgba(139,200,234,0.10), rgba(139,200,234,0.22));padding:14px 16px;box-sizing:border-box;">
+      <div style="display:inline-block;font-size:12px;font-weight:600;color:#1F6E9F;background:rgba(139,200,234,0.30);border-radius:20px;padding:3px 10px;margin-bottom:10px;">本周（9.2–9.7）· 体系化平台</div>
+      <div style="font-size:15px;font-weight:600;color:#1A1B1C;margin-bottom:12px;">造"内容"——ComfyUI 漫剧生产平台</div>
+      <div style="font-size:13px;color:#1A1B1C;line-height:1.7;">
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">定位：</span>内容生产流水线</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">核心工作：</span>5 段式流水线搭建 + 18.3GB 模型体系 + 15 个可复现工作流 + GitHub 托管</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">产出：</span>完整漫剧成片 MP4</div>
+        <div style="margin-bottom:8px;"><span style="font-weight:600;">应用：</span>AI 漫剧/短剧 · 数字人口播 · 角色一致性动画</div>
+        <div><span style="font-weight:600;">自动化程度：</span>全链路 5 环节</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 本周五段流水线 -->
+  <div style="margin-top:16px;border-radius:14px;border:1px solid #E4E3DD;background:#FFFFFF;padding:14px 16px;box-sizing:border-box;">
+    <div style="font-size:13.5px;font-weight:600;color:#1A1B1C;margin-bottom:10px;">本周核心成果：五段式漫剧生产流水线（全部实测跑通）</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;box-sizing:border-box;">
+      <div style="flex:1 1 120px;min-width:0;text-align:center;background:rgba(139,200,234,0.14);border-radius:10px;padding:10px 8px;box-sizing:border-box;"><div style="font-size:11px;color:#6B7280;">① 角色立绘</div><div style="font-size:12px;font-weight:600;color:#1A1B1C;margin-top:3px;">日漫底模文生图</div></div>
+      <div style="flex:1 1 120px;min-width:0;text-align:center;background:rgba(139,200,234,0.14);border-radius:10px;padding:10px 8px;box-sizing:border-box;"><div style="font-size:11px;color:#6B7280;">② 分镜画面</div><div style="font-size:12px;font-weight:600;color:#1A1B1C;margin-top:3px;">姿态控制+角色一致</div></div>
+      <div style="flex:1 1 120px;min-width:0;text-align:center;background:rgba(139,200,234,0.14);border-radius:10px;padding:10px 8px;box-sizing:border-box;"><div style="font-size:11px;color:#6B7280;">③ 动画化</div><div style="font-size:12px;font-weight:600;color:#1A1B1C;margin-top:3px;">AnimateDiff+8种运镜</div></div>
+      <div style="flex:1 1 120px;min-width:0;text-align:center;background:rgba(139,200,234,0.14);border-radius:10px;padding:10px 8px;box-sizing:border-box;"><div style="font-size:11px;color:#6B7280;">④ 口播唇形</div><div style="font-size:12px;font-weight:600;color:#1A1B1C;margin-top:3px;">GPT-SoVITS+SadTalker</div></div>
+      <div style="flex:1 1 120px;min-width:0;text-align:center;background:rgba(139,200,234,0.14);border-radius:10px;padding:10px 8px;box-sizing:border-box;"><div style="font-size:11px;color:#6B7280;">⑤ 成片合成</div><div style="font-size:12px;font-weight:600;color:#1A1B1C;margin-top:3px;">拼接+音频+导出MP4</div></div>
+    </div>
+  </div>
+
+  <!-- 本周时间线 -->
+  <div style="margin-top:16px;border-radius:14px;border:1px solid #E4E3DD;background:#FFFFFF;padding:14px 16px;box-sizing:border-box;">
+    <div style="font-size:13.5px;font-weight:600;color:#1A1B1C;margin-bottom:12px;">本周推进时间线</div>
+    <div style="display:flex;gap:0;flex-wrap:wrap;box-sizing:border-box;">
+      <div style="flex:1 1 150px;min-width:0;padding:0 10px;border-left:2px solid #8BC8EA;box-sizing:border-box;">
+        <div style="font-size:12.5px;font-weight:600;color:#1F6E9F;">9.4 周四</div>
+        <div style="font-size:12px;color:#1A1B1C;line-height:1.55;margin-top:4px;">音频驱动口播验证跑通（图片+音频→对口型视频）</div>
+      </div>
+      <div style="flex:1 1 150px;min-width:0;padding:0 10px;border-left:2px solid #8BC8EA;box-sizing:border-box;">
+        <div style="font-size:12.5px;font-weight:600;color:#1F6E9F;">9.5 周五</div>
+        <div style="font-size:12px;color:#1A1B1C;line-height:1.55;margin-top:4px;">模型逐个安装完成，5 段流水线全部实测，产出漫剧样片</div>
+      </div>
+      <div style="flex:1 1 150px;min-width:0;padding:0 10px;border-left:2px solid #8BC8EA;box-sizing:border-box;">
+        <div style="font-size:12.5px;font-weight:600;color:#1F6E9F;">9.6 周六</div>
+        <div style="font-size:12px;color:#1A1B1C;line-height:1.55;margin-top:4px;">平台完整性确认，使用手册交付</div>
+      </div>
+      <div style="flex:1 1 150px;min-width:0;padding:0 10px;border-left:2px solid #8BC8EA;box-sizing:border-box;">
+        <div style="font-size:12.5px;font-weight:600;color:#1F6E9F;">9.7 周日</div>
+        <div style="font-size:12px;color:#1A1B1C;line-height:1.55;margin-top:4px;">项目推送 GitHub，GPT-SoVITS 接入平台作为配音引擎（收尾中）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 一句话总结 -->
+  <div style="margin-top:14px;text-align:center;font-size:14px;font-weight:600;color:#1F6E9F;">上周造"声音"，本周造"内容" —— 从单点能力升级为全链路生产体系</div>
+
+</div>
+</html>

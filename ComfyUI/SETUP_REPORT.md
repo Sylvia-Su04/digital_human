@@ -51,8 +51,9 @@
 | **AnimateDiff 运镜 LoRA × 8** | `models\animatediff_motion_lora\`（ZoomIn/Out、PanLeft/Right、TiltUp/Down、Rolling 双向） | 0.59 GB | 动画推拉/平移/倾斜运镜 | ✅ ZoomIn 实测 |
 | **RealESRGAN x4plus** | `models\upscale_models\RealESRGAN_x4plus.safetensors` | 63.8 MB | 图片/视频超分 4× | ✅ 512→2048px 实测 |
 | **优化 VAE** | `models\vae\vae-ft-mse-840000-ema-pruned.safetensors` | 319 MB | 替代自带 VAE，色彩更佳 | ✅ 已识别 |
+| **GPT-SoVITS（配音引擎，含 Su/Su_emotional 音色）** | `D:\digital_human\GPT-SoVITS`（GPT_weights_v2Pro + SoVITS_weights_v2Pro） | ~200 MB | 文案→人声 wav，平台配音引擎，API 端口 9880 | ✅ 微调完成 |
 
-**累计模型体积：约 18.4 GB**
+**累计模型体积：约 18.6 GB（含 GPT-SoVITS）**
 
 ### 预处理器检测模型（comfyui_controlnet_aux/ckpts）
 
@@ -78,6 +79,7 @@
 | **AnimateDiff + ZoomIn 运镜** | `output\animatediff_zoomin_test_00001_.webp/gif` | ✅ 16 帧推近镜头，79 秒 |
 | **RealESRGAN 超分** | `output\realesrgan_test_00001_.png` | ✅ 512→2048px 清晰放大 |
 | SadTalker 音频口播 | `output\20260904214509.mp4` | ✅ 图片+音频→对口型视频 |
+| GPT-SoVITS 配音（Su 音色） | `ComfyUI\input\role_voice.wav` | ✅ 文案→人声 wav（API 模式） |
 
 ---
 
@@ -120,7 +122,7 @@
 ```
 剧本/分镜文案
     ↓
-GPT-SoVITS（D:\digital_human）→ 角色语音
+GPT-SoVITS 配音引擎（tts_to_lipsync.py，Su/Su_emotional 音色）→ role_voice.wav
     ↓
 SD1.5/Counterfeit 底模 + ControlNet(openpose/depth/canny/tile) → 分镜画面
     ↓

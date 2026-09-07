@@ -5,13 +5,19 @@
 
 ---
 
-## 一、平台结构：5 段式生产流水线
+## 一、平台结构：5 段式生产流水线 + GPT-SoVITS 配音引擎
 
 ```
-① 角色立绘 ──→ ② 分镜画面 ──→ ③ 动画化 ──┐
-                                          ├──→ ⑤ 成片合成（拼接+音频+导出）
-④ 口播唇形（音频驱动） ───────────────────┘
+【GPT-SoVITS 配音引擎】（平台级，独立进程，端口 9880）
+  文案 ──→ tts_to_lipsync.py ──→ role_voice.wav ──┐
+                                                   │
+① 角色立绘 ──→ ② 分镜画面 ──→ ③ 动画化 ──┐        │
+                                          ├──→ ④ 口播唇形（SadTalker，音频驱动）──→ ⑤ 成片合成
+                                          └────────────────────────────────────────┘
 ```
+
+> **GPT-SoVITS = 配音引擎**（文案→人声 wav），**SadTalker = 对口型**（图片+音频→说话视频），两者协作不替代。
+> 配音通过 `D:\digital_human\tts_to_lipsync.py` 一键生成，输出到 `ComfyUI/input/role_voice.wav`，供 ④ 直接使用。
 
 | # | Workflow 文件 | 环节 | 输出 |
 |---|---------------|------|------|
@@ -29,12 +35,24 @@
 |--------|------|------|
 | `pose_ref.png` | 分镜姿态参考图（人物姿势图/火柴人/真人照片均可） | ② 用，自己画或 AI 生成 |
 | `char_ref.png` | 角色参考图（用于保持角色一致） | ② 用，取 ① 的输出 |
-| `role_voice.wav` | 角色配音 | ④ 用，GPT-SoVITS 生成 |
+| `role_voice.wav` | 角色配音 | ④ 用，由 `tts_to_lipsync.py` 调用 GPT-SoVITS 生成（Su/Su_emotional 音色） |
 | `manhua_scene.png` / `manhua_character.png` | ③④ 的输入图 | ①/② 的输出复制过来 |
 
 > 所有输入图/音频先放到 `D:\digital_human\ComfyUI\input\`，ComfyUI 网页界面里才能选到。
 > ③ 的输入图：把 ② 输出的分镜图复制到 input 目录并改名。
 > ⑤ 的路径参数在网页界面里直接改。
+>
+> **配音生成（文案 → role_voice.wav）：**
+> ```powershell
+> # CLI 模式（默认，一次性加载模型）
+> D:\conda_envs\digital_human\python.exe D:\digital_human\tts_to_lipsync.py --text "你的台词文案"
+> # API 模式（先启动服务，模型常驻，适合批量配音）
+> D:\conda_envs\digital_human\python.exe D:\digital_human\tts_to_lipsync.py --start-api
+> D:\conda_envs\digital_human\python.exe D:\digital_human\tts_to_lipsync.py --text "你的台词文案" --mode api
+> # 切换情感版音色
+> D:\conda_envs\digital_human\python.exe D:\digital_human\tts_to_lipsync.py --text "你的台词" --voice Su_emotional
+> ```
+> 生成的 wav 自动覆盖 `ComfyUI/input/role_voice.wav`，④ 口播 workflow 直接读取。
 
 ---
 
@@ -62,10 +80,12 @@
 - **注意**：denoise 0.7（图生视频保留构图）；动作幅度靠换 LoRA 或调 strength
 
 ### ④ 口播唇形（workflow_manhua_lipsync.json）
-- **作用**：角色图片 + 配音音频 → 对口型说话视频
-- **素材**：`input/manhua_character.png` + `input/role_voice.wav`（GPT-SoVITS 生成）
+- **作用**：角色图片 + 配音音频 → 对口型说话视频（SadTalker 驱动）
+- **素材**：`input/manhua_character.png`（正脸特写）+ `input/role_voice.wav`（由 tts_to_lipsync.py 调用 GPT-SoVITS 生成）
+- **集成链路**：文案 → `tts_to_lipsync.py` → GPT-SoVITS API/CLI → `role_voice.wav` → SadTalker 节点 → 口播视频
 - **出图**：`output/*.mp4`
 - **注意**：stillMode=true 时仅唇部动（适合分镜静止特写）；要全身动改 false
+- **显存约束**：GPT-SoVITS 推理与 ComfyUI 不可并行（4GB 显存）。先跑 GPT-SoVITS 生成 wav，再启动 ComfyUI 跑口播。
 
 ### ⑤ 成片合成（workflow_manhua_final.json）
 - **作用**：把动画片段/口播片段拼接，配乐/配音合流，导出 MP4
@@ -79,7 +99,7 @@
 
 1. **写剧本/分镜**：确定台词与分镜（每格画面+对应配音时长）
 2. **① 生成角色**：设计 1-2 个主角定妆照，固定为 char_ref
-3. **GPT-SoVITS 配音**：按台词生成每格的角色音频 → input/role_voice.wav
+3. **GPT-SoVITS 配音**：用 `tts_to_lipsync.py --text "台词"` 生成每格角色音频 → input/role_voice.wav（批量配音可先 `--start-api` 启动常驻服务）
 4. **② 逐格生成分镜**：每格画一个姿态参考（可用上一格改动作），跑 scene workflow
 5. **③ 动画化**：重要的格（转场/特写）跑 animation workflow 加运镜
 6. **④ 口播**：说话格跑 lipsync workflow
@@ -113,4 +133,5 @@
 | 输出目录 | `D:\digital_human\ComfyUI\output\` |
 | 节点代码 | `D:\digital_human\ComfyUI\custom_nodes\` |
 | 模型 | `D:\digital_human\ComfyUI\models\`（另见 SETUP_REPORT.md） |
-| GPT-SoVITS（配音） | `D:\digital_human\GPT-SoVITS`（独立项目） |
+| GPT-SoVITS（平台配音引擎） | `D:\digital_human\GPT-SoVITS`，含 Su/Su_emotional 微调音色，API 端口 9880 |
+| 配音集成脚本 | `D:\digital_human\tts_to_lipsync.py`（文案→role_voice.wav，支持 CLI/API 双模式） |
