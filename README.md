@@ -142,4 +142,4 @@ D:\digital_human
 | `ComfyUI/` | 漫剧生产运行时 | `git clone https://github.com/comfyanonymous/ComfyUI.git` |
 | `pylibs/` | gfpgan/basicsr 依赖源码 | 随 SadTalker/ComfyUI 环境安装 |
 
-> 注意：仓库历史中曾误提交过 ComfyUI/SadTalker/pylibs 第三方源码，已在 2026-09 整理时移出跟踪（磁盘文件不受影响）。如需彻底从历史中移除以减小仓库体积，可另行执行 `git filter-repo` 重写历史。
+> 仓库历史曾误提交过 ComfyUI/SadTalker/pylibs 第三方源码，已于 2026-09 整理时通过 git-filter-repo 从全部历史中移除（磁盘文件不受影响），远程 GitHub 仓库已同步瘦身。
