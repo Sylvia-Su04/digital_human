@@ -2,21 +2,30 @@
   "1": {
     "class_type": "LoadImage",
     "inputs": {
-      "image": "manhua_scene.png"
+      "image": "S8_unknown_sd_384.png"
     }
   },
   "2": {
     "class_type": "VAEEncode",
     "inputs": {
-      "pixels": ["1", 0],
-      "vae": ["4", 2]
+      "pixels": [
+        "1",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
     }
   },
   "13": {
     "class_type": "VHS_DuplicateLatents",
     "inputs": {
-      "latents": ["2", 0],
-      "multiply_by": 12
+      "latents": [
+        "2",
+        0
+      ],
+      "multiply_by": 16
     }
   },
   "3": {
@@ -28,7 +37,7 @@
   "4": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "dreamshaper_8.safetensors"
+      "ckpt_name": "Counterfeit-V2.5_fp16.safetensors"
     }
   },
   "5": {
@@ -41,10 +50,16 @@
   "6": {
     "class_type": "ADE_ApplyAnimateDiffModel",
     "inputs": {
-      "motion_model": ["3", 0],
+      "motion_model": [
+        "3",
+        0
+      ],
       "start_percent": 0.0,
       "end_percent": 1.0,
-      "motion_lora": ["5", 0],
+      "motion_lora": [
+        "5",
+        0
+      ],
       "scale_multival": null,
       "effect_multival": null
     }
@@ -52,9 +67,15 @@
   "7": {
     "class_type": "ADE_UseEvolvedSampling",
     "inputs": {
-      "model": ["4", 0],
+      "model": [
+        "4",
+        0
+      ],
       "beta_schedule": "autoselect",
-      "m_models": ["6", 0],
+      "m_models": [
+        "6",
+        0
+      ],
       "context_options": null,
       "sample_settings": null
     }
@@ -62,43 +83,70 @@
   "8": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "same scene, 3d render, cgi, realistic 3d character, subtle motion, gentle camera push-in, consistent character, cinematic lighting, high quality",
-      "clip": ["4", 1]
+      "text": "same scene, anime manga style, subtle motion, gentle camera push-in, consistent character, detailed, high quality",
+      "clip": [
+        "4",
+        1
+      ]
     }
   },
   "9": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "low quality, blurry, distorted, flickering, static, watermark, anime, cartoon, illustration, 2d, lineart",
-      "clip": ["4", 1]
+      "text": "low quality, blurry, distorted, flickering, static, watermark",
+      "clip": [
+        "4",
+        1
+      ]
     }
   },
   "10": {
     "class_type": "KSampler",
     "inputs": {
-      "seed": 42,
+      "seed": 8008,
       "steps": 18,
       "cfg": 6.0,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.6,
-      "model": ["7", 0],
-      "positive": ["8", 0],
-      "negative": ["9", 0],
-      "latent_image": ["13", 0]
+      "denoise": 0.7,
+      "model": [
+        "7",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "13",
+        0
+      ]
     }
   },
   "11": {
     "class_type": "VAEDecode",
     "inputs": {
-      "samples": ["10", 0],
-      "vae": ["4", 2]
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
     }
   },
   "12": {
     "class_type": "VHS_VideoCombine",
     "inputs": {
-      "images": ["11", 0],
+      "images": [
+        "11",
+        0
+      ],
       "frame_rate": 8,
       "loop_count": 0,
       "filename_prefix": "manhua_animation",

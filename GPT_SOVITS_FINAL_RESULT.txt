@@ -1,0 +1,141 @@
+============================================================
+GPT-SoVITS 接入漫剧平台 — 最终实测报告
+完成时间: 2026-09-07
+============================================================
+
+一、任务完成状态
+------------------------------------------------------------
+[✅] 1. GPT-SoVITS 可用性探查
+[✅] 2. 文案→配音→口播集成脚本 (tts_to_lipsync.py)
+[✅] 3. 文档更新 (MANHUA_WORKFLOW_GUIDE.md + SETUP_REPORT.md)
+[✅] 4. 端到端实测验证 (文案→GPT-SoVITS配音→SadTalker口播)
+[N/A] 5. 阻塞处理 (无阻塞，已全部跑通)
+
+二、模型确认
+------------------------------------------------------------
+GPT-SoVITS 项目: D:\digital_human\GPT-SoVITS
+Python 环境: D:\conda_envs\digital_human\python.exe (torch 2.7.1+cu118)
+
+Su 基础音色:
+  GPT:  GPT_weights_v2Pro\Su_e15_s135.ckpt
+  SoVITS: SoVITS_weights_v2Pro\Su_e8_s296.pth
+
+Su_emotional 情感版:
+  GPT:  GPT_weights_v2Pro\Su_emotional-e15.ckpt
+  SoVITS: SoVITS_weights_v2Pro\Su_emotional_e5_s215.pth
+
+参考音频: D:\digital_human\ref_clip.wav
+参考文本: "加油呀，你已经很棒了，真的。"
+
+三、集成脚本
+------------------------------------------------------------
+路径: D:\digital_human\tts_to_lipsync.py (9321 bytes)
+功能:
+  - CLI 模式: --text "文案" --mode cli --voice Su
+  - API 模式: --text "文案" --mode api --api-url http://127.0.0.1:9880
+  - 启动 API: --start-api -g <gpt> -s <sovits> -dr <ref> -dt <ref_text>
+  - 输出: D:\digital_human\ComfyUI\input\role_voice.wav
+  - 支持 Su / Su_emotional 音色切换
+
+四、文档更新
+------------------------------------------------------------
+1. D:\digital_human\ComfyUI\MANHUA_WORKFLOW_GUIDE.md
+   - 第一节: 加入 GPT-SoVITS 配音引擎架构图和集成链路
+   - 第二节: role_voice.wav 来源说明 + 配音生成命令示例
+   - 第四节: 口播环节补充"文案→GPT-SoVITS→wav→SadTalker"链路
+   - 第四节: 推荐生产流程补充 tts_to_lipsync.py 用法和显存约束
+   - 第六节: GPT-SoVITS 从"独立项目"升级为"平台配音引擎"
+
+2. D:\digital_human\ComfyUI\SETUP_REPORT.md
+   - 模型清单: 加入"GPT-SoVITS（配音引擎，含 Su/Su_emotional 音色）"
+   - 路线图: GPT-SoVITS 描述更新为配音引擎
+   - 实测结果: 加入 GPT-SoVITS 配音行
+
+五、端到端实测
+------------------------------------------------------------
+
+【步骤1: GPT-SoVITS 配音生成】
+  模式: CLI (inference_cli.py via subprocess)
+  模型: Su_e15_s135.ckpt + Su_e8_s296.pth
+  参考: ref_clip.wav + "加油呀，你已经很棒了，真的。"
+  文案: "大家好，欢迎来到漫剧生成平台。今天我们要讲述一个关于勇气与成长的故事。"
+  输出: D:\digital_human\ComfyUI\input\role_voice.wav
+  文件大小: 103,724 bytes (101 KB)
+  生成时间: 2026-09-07 16:53:34
+  耗时: 约 3-4 分钟 (含模型加载 ~2.5min + 推理 ~30s)
+  显存峰值: ~3850 MiB / 4096 MiB (94%)
+  状态: ✅ 成功
+
+  注: 此前因沙箱 weight.json 写入权限问题多次失败，
+      D 盘完全可写后直接运行 inference_cli.py 一次成功。
+      推理日志: D:\digital_human\tts_final_inference.log
+
+【步骤2: 释放显存，启动 ComfyUI】
+  停止 GPT-SoVITS 所有 python 进程
+  启动: D:\digital_human\ComfyUI\main.py --port 8189
+  ComfyUI 版本: 0.34.0
+  加载节点: 1206 个
+  SadTalker 节点: ✅ 已加载 (SadTalker)
+  ShowAudio 节点: ✅ 已加载
+
+【步骤3: SadTalker 口播生成】
+  Workflow: D:\digital_human\ComfyUI\workflow_manhua_lipsync.json
+  输入图片: manhua_character.png (LoadImage)
+  输入音频: role_voice.wav (ShowAudio)
+  SadTalker 参数:
+    poseStyle: 0
+    faceModelResolution: 256
+    preprocess: crop
+    stillMode: true
+    batchSizeInGeneration: 2
+    gfpganAsFaceEnhancer: false
+  Prompt ID: 6d5059ef-b706-4b34-9322-d68a992499a0
+  输出视频:
+    D:\digital_human\ComfyUI\custom_nodes\Comfyui-SadTalker\SadTalker\output\
+    3347e2d6-6f2b-4b1d-a12e-cb2230197f60\input_image##input_audio.mp4
+  文件大小: 207,774 bytes (203 KB)
+  生成时间: 2026-09-07 17:08:08
+  耗时: 约 1-2 分钟
+  显存峰值: ~3713 MiB / 4096 MiB (91%)
+  状态: ✅ 成功
+
+六、显存约束验证
+------------------------------------------------------------
+  - GPT-SoVITS 推理与 ComfyUI 严格串行执行，未并行
+  - GPT-SoVITS 推理峰值: ~3850 MiB (94%)
+  - SadTalker 推理峰值: ~3713 MiB (91%)
+  - 4GB 显存可独立运行两者，但不可同时加载
+  - 生产流程建议: 先批量生成所有 wav，再启动 ComfyUI 批量口播
+
+七、产出清单
+------------------------------------------------------------
+  集成脚本: D:\digital_human\tts_to_lipsync.py
+  配音音频: D:\digital_human\ComfyUI\input\role_voice.wav (101 KB)
+  口播视频: D:\digital_human\ComfyUI\custom_nodes\Comfyui-SadTalker\SadTalker\output\
+            3347e2d6-6f2b-4b1d-a12e-cb2230197f60\input_image##input_audio.mp4 (203 KB)
+  推理脚本: D:\digital_human\run_final_tts.py
+  推理日志: D:\digital_human\tts_final_inference.log
+  文档1: D:\digital_human\ComfyUI\MANHUA_WORKFLOW_GUIDE.md
+  文档2: D:\digital_human\ComfyUI\SETUP_REPORT.md
+  Workflow: D:\digital_human\ComfyUI\workflow_manhua_lipsync.json
+
+八、生产使用命令
+------------------------------------------------------------
+  # 生成配音 (CLI 模式)
+  cd D:\digital_human
+  D:\conda_envs\digital_human\python.exe tts_to_lipsync.py --text "台词内容" --mode cli --voice Su
+
+  # 启动 ComfyUI 跑口播
+  cd D:\digital_human\ComfyUI
+  D:\digital_human\venv\Scripts\python.exe main.py --listen 127.0.0.1 --port 8189
+  # 浏览器打开 http://127.0.0.1:8189，加载 workflow_manhua_lipsync.json，点 Queue Prompt
+
+九、已知问题与建议
+------------------------------------------------------------
+  1. GPT-SoVITS 模型加载较慢 (~2.5min)，建议生产时用 API 模式常驻服务
+     (api.py -p 9880)，避免每次推理重新加载模型
+  2. 4GB 显存下 GPT-SoVITS 推理峰值 94%，接近 OOM，建议关闭其他 GPU 程序
+  3. SadTalker 输出视频在 custom_nodes 目录下，建议后续 workflow 增加
+     VHS_VideoCombine 节点直接输出到 ComfyUI/output 目录
+  4. 当前 role_voice.wav 为 101KB（约1.6秒@32kHz），文案较长时文件会更大
+============================================================

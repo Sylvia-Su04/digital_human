@@ -2,20 +2,20 @@
   "1": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "dreamshaper_8.safetensors"
+      "ckpt_name": "Counterfeit-V2.5_fp16.safetensors"
     }
   },
   "2": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "1girl, 3d render, cgi, octane render, pixar style 3d animation, realistic skin texture, detailed 3d character, cinematic lighting, school uniform, close-up portrait, face closeup, upper body, facing viewer, high quality",
+      "text": "masterpiece, best quality, semi-realistic anime style, sci-fi space opera, 1girl, original character design, silver-gray short hair, amber eyes, sharp determined gaze, black military starship captain uniform with red shoulder epaulet, dark armor plating details, standing full body, facing viewer, neutral confident expression, simple dark navy background, clean lineart, detailed eyes, high quality",
       "clip": ["1", 1]
     }
   },
   "3": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "low quality, blurry, distorted, extra fingers, bad anatomy, watermark, text, anime, cartoon, illustration, 2d, lineart, flat color",
+      "text": "low quality, blurry, distorted, extra fingers, bad anatomy, watermark, text, deformed face",
       "clip": ["1", 1]
     }
   },
@@ -30,8 +30,8 @@
   "5": {
     "class_type": "KSampler",
     "inputs": {
-      "seed": 42,
-      "steps": 22,
+      "seed": 1001,
+      "steps": 24,
       "cfg": 7.0,
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",

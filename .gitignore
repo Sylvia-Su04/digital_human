@@ -1,6 +1,16 @@
 # ==================== 第三方克隆仓库（不纳入本仓库） ====================
 LivePortrait/
 GPT-SoVITS/
+SadTalker/
+pylibs/
+
+# ==================== ComfyUI 运行时（第三方，不纳入本仓库） ====================
+# 只保留自定义 workflow、平台文档与启动脚本，其余为 ComfyUI 框架源码
+ComfyUI/*
+!ComfyUI/workflow_*.json
+!ComfyUI/MANHUA_WORKFLOW_GUIDE.md
+!ComfyUI/SETUP_REPORT.md
+!ComfyUI/start_comfyui.bat
 
 # ==================== 模型权重（大文件，不纳入版本控制） ====================
 *.pth
@@ -77,6 +87,14 @@ ComfyUI/input/
 .torch/
 .uv/
 temp/
+
+# ==================== 漫剧工作流测试产物 ====================
+manhua_work/*.png
+manhua_work/comfyui_log.txt
+voice/*.wav
+voice/*.mp4
+voice/*.jpg
+voice/batch_log.txt
 
 # ==================== 汇报临时文件 ====================
 汇报_*.txt

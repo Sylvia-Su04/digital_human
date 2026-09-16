@@ -2,13 +2,16 @@
   "1": {
     "class_type": "LoadImage",
     "inputs": {
-      "image": "pose_ref.png"
+      "image": "pose_back.png"
     }
   },
   "2": {
     "class_type": "DWPreprocessor",
     "inputs": {
-      "image": ["1", 0],
+      "image": [
+        "1",
+        0
+      ],
       "detect_hand": "enable",
       "detect_body": "enable",
       "detect_face": "enable",
@@ -26,7 +29,7 @@
   "4": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "dreamshaper_8.safetensors"
+      "ckpt_name": "Counterfeit-V2.5_fp16.safetensors"
     }
   },
   "5": {
@@ -39,15 +42,27 @@
     "class_type": "IPAdapterUnifiedLoader",
     "inputs": {
       "preset": "PLUS (high strength)",
-      "model": ["4", 0]
+      "model": [
+        "4",
+        0
+      ]
     }
   },
   "7": {
     "class_type": "IPAdapter",
     "inputs": {
-      "model": ["6", 0],
-      "ipadapter": ["6", 1],
-      "image": ["5", 0],
+      "model": [
+        "6",
+        0
+      ],
+      "ipadapter": [
+        "6",
+        1
+      ],
+      "image": [
+        "5",
+        0
+      ],
       "weight": 0.85,
       "start_at": 0.0,
       "end_at": 1.0,
@@ -58,24 +73,42 @@
   "8": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "1girl, 3d render, cgi, octane render, pixar style 3d animation, realistic skin texture, same character as reference, dynamic action pose, dramatic angle, detailed background, cinematic lighting, high quality",
-      "clip": ["4", 1]
+      "text": "1girl, silver-gray short hair, black military captain uniform with red epaulet, seen from behind, back view, facing away from camera, standing before a large starship bridge window showing starfield and nebula, damaged bridge interior, cold blue light, cinematic lighting, no weapon, hands at sides, high quality",
+      "clip": [
+        "4",
+        1
+      ]
     }
   },
   "9": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "low quality, blurry, distorted, extra limbs, bad anatomy, watermark, text, different character, anime, cartoon, illustration, 2d, lineart, flat color",
-      "clip": ["4", 1]
+      "text": "low quality, blurry, distorted, extra limbs, bad anatomy, watermark, text, different character, front view, facing viewer, weapon, gun, sword, blade, staff",
+      "clip": [
+        "4",
+        1
+      ]
     }
   },
   "10": {
     "class_type": "ControlNetApplyAdvanced",
     "inputs": {
-      "positive": ["8", 0],
-      "negative": ["9", 0],
-      "control_net": ["3", 0],
-      "image": ["2", 0],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "9",
+        0
+      ],
+      "control_net": [
+        "3",
+        0
+      ],
+      "image": [
+        "2",
+        0
+      ],
       "strength": 0.9,
       "start_percent": 0.0,
       "end_percent": 1.0
@@ -92,30 +125,51 @@
   "12": {
     "class_type": "KSampler",
     "inputs": {
-      "seed": 42,
+      "seed": 6222,
       "steps": 24,
       "cfg": 7.0,
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",
       "denoise": 1.0,
-      "model": ["7", 0],
-      "positive": ["10", 0],
-      "negative": ["10", 1],
-      "latent_image": ["11", 0]
+      "model": [
+        "7",
+        0
+      ],
+      "positive": [
+        "10",
+        0
+      ],
+      "negative": [
+        "10",
+        1
+      ],
+      "latent_image": [
+        "11",
+        0
+      ]
     }
   },
   "13": {
     "class_type": "VAEDecode",
     "inputs": {
-      "samples": ["12", 0],
-      "vae": ["4", 2]
+      "samples": [
+        "12",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
     }
   },
   "14": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "manhua_scene",
-      "images": ["13", 0]
+      "images": [
+        "13",
+        0
+      ]
     }
   }
 }

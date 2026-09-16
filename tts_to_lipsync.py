@@ -57,6 +57,22 @@ VOICES = {
     },
 }
 
+# 内置角色音色（edge-tts，微软免费 TTS，无需训练/参考音频，联网即用）
+# 用 --voice list 可查看全部；角色名可按需增改
+EDGE_VOICES = {
+    "旁白": "zh-CN-YunyangNeural",      # 云扬 · 播音腔
+    "男主": "zh-CN-YunxiNeural",        # 云希 · 阳光青年
+    "女主": "zh-CN-XiaoxiaoNeural",     # 晓晓 · 温柔女声
+    "反派": "zh-CN-YunjianNeural",      # 云健 · 低沉解说
+    "少年": "zh-CN-YunxiaNeural",       # 云夏 · 少年
+    "少女": "zh-CN-XiaoyiNeural",       # 晓伊 · 活泼女声
+    "童声": "zh-CN-XiaoshuangNeural",   # 晓双 · 儿童女声
+    "成熟女": "zh-CN-XiaohanNeural",    # 晓涵 · 成熟女声
+    "老年女": "zh-CN-XiaoyanNeural",    # 晓颜 · 老年女声
+    "台湾女": "zh-TW-HsiaoChenNeural",  # 曉臻 · 台湾腔
+    "香港女": "zh-HK-HiuMaanNeural",    # 曉曼 · 粤语腔
+}
+
 
 def build_env():
     env = os.environ.copy()
@@ -219,13 +235,42 @@ def start_api(voice_name="Su"):
     return proc
 
 
+def tts_edge(text, voice_name, output_path):
+    """内置角色音色（edge-tts）— 零素材、零训练、联网即用"""
+    import asyncio
+    import edge_tts
+    voice_id = EDGE_VOICES[voice_name]
+    print(f"[Edge-TTS] 角色: {voice_name} ({voice_id})")
+    print(f"[Edge-TTS] 文案 ({len(text)} 字): {text[:80]}{'...' if len(text) > 80 else ''}")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    async def _run():
+        c = edge_tts.Communicate(text, voice_id)
+        await c.save(output_path)
+
+    try:
+        asyncio.run(_run())
+    except Exception as e:
+        print(f"[Edge-TTS] 失败: {e}")
+        return False
+
+    if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
+        size_kb = os.path.getsize(output_path) / 1024
+        print(f"[Edge-TTS] 配音完成: {output_path} ({size_kb:.1f} KB)")
+        return True
+    print("[Edge-TTS] 输出异常（文件缺失或过小）")
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="漫剧平台配音集成：文案 -> GPT-SoVITS -> role_voice.wav",
     )
     parser.add_argument("--text", type=str, help="待配音的文案")
     parser.add_argument("--text-file", type=str, help="从文件读取文案（UTF-8）")
-    parser.add_argument("--voice", type=str, default="Su", choices=list(VOICES.keys()), help="角色音色")
+    parser.add_argument("--voice", type=str, default="Su",
+                        choices=list(VOICES.keys()) + list(EDGE_VOICES.keys()) + ["list"],
+                        help="角色音色（Su/Su_emotional=GPT-SoVITS；旁白/男主/女主等=内置edge-tts；list=查看全部）")
     parser.add_argument("--output", type=str, default=DEFAULT_OUTPUT, help="输出 wav 路径")
     parser.add_argument("--mode", type=str, default="auto", choices=["auto", "cli", "api"], help="推理模式")
     parser.add_argument("--start-api", action="store_true", help="后台启动 API 服务")
@@ -249,6 +294,25 @@ def main():
         print("请通过 --text 或 --text-file 提供文案")
         parser.print_help()
         sys.exit(1)
+
+    # 查看全部音色
+    if args.voice == "list":
+        print("=== GPT-SoVITS 音色（本地推理） ===")
+        for k in VOICES:
+            print(f"  {k}")
+        print("=== 内置角色音色（edge-tts，零素材即用） ===")
+        for k, v in EDGE_VOICES.items():
+            print(f"  {k}  ->  {v}")
+        return
+
+    # 内置音色走 edge-tts
+    if args.voice in EDGE_VOICES:
+        ok = tts_edge(text, args.voice, args.output)
+        if not ok:
+            sys.exit(1)
+        print(f"\n配音文件已就绪: {args.output}")
+        print("可在 ComfyUI 中加载 workflow_manhua_lipsync.json 使用")
+        return
 
     mode = args.mode
     if mode == "auto":
